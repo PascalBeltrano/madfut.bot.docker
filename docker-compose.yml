@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+    adminer:
+        container_name: madfut_bot_adminer
+        image: adminer
+        ports:
+        - 8080:8080
+        depends_on:
+        - db
+    api:
+        container_name: madfut_bot_api
+        build: ./docker/php
+        ports:
+        - "80:80"
+        volumes:
+        - ../madfut.bot.api:/app
+        depends_on:
+        - db
+    db:
+        container_name: madfut_bot_db
+        image: mysql
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: api
+            MYSQL_USER: api
+            MYSQL_PASSWORD: 123456
+        volumes:
+        - ./db:/var/lib/mysql
+        ports:
+        - "3306:3306"
